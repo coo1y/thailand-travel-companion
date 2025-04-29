@@ -130,6 +130,12 @@ Thailand has faced tourism challenges such as natural disasters impacting touris
 
 ---
 
+## Demo
+
+[![Watch the video](https://img.youtube.com/vi/FnwEfFdVK20/0.jpg)](https://www.youtube.com/watch?v=FnwEfFdVK20)
+
+---
+
 ## Acknowledgement
 
 This repository was created for submission to the [Microsoft AI Agents Hackathon](https://microsoft.github.io/AI_Agents_Hackathon/).
