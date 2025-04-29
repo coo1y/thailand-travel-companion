@@ -1,0 +1,6 @@
+local_thai_task:
+  description: >
+    Search the most relevant information about Thailand from the internet for the user query: {query}
+  expected_output: >
+    The most and only Thai relevant information in the form of text as searched from the internet.
+  agent: local_thai_agent

@@ -1,0 +1,10 @@
+crewai
+crewai-tools
+unstructured
+python-dotenv
+streamlit
+serpapi
+google-search-results
+psycopg2-binary
+azure-storage-blob
+azure-identity

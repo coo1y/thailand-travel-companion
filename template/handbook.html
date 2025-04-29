@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thailand Travel Handbook</title>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #00695c;
+      --secondary-color: #ffffff;
+      --accent-color: #ffca28;
+      --text-color: #333333;
+      --link-color: #00695c;
+      --bg-light: #f9f9f9;
+      --card-bg: #ffffff;
+      --card-border: #e0e0e0;
+      --card-shadow: rgba(0, 0, 0, 0.1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: var(--text-color);
+      background: var(--bg-light);
+      line-height: 1.6;
+    }
+    .banner {
+      background: var(--primary-color);
+      color: var(--secondary-color);
+      text-align: center;
+      padding: 15px 0;
+      font-size: 2rem;
+      font-weight: 600;
+    }
+    .navbar {
+      position: sticky;
+      top: 0;
+      background: var(--secondary-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      border-bottom: 1px solid var(--card-border);
+      padding: 10px 20px;
+    }
+    .navbar a {
+      flex: 1;
+      text-align: center;
+      color: var(--link-color);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .navbar a:first-child { text-align: left; }
+    .navbar a:last-child { text-align: right; }
+    .navbar a:hover {
+      color: var(--primary-color);
+    }
+    .content {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    section {
+      margin-bottom: 40px;
+    }
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      position: relative;
+      padding-bottom: 5px;
+    }
+    h2::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--accent-color);
+      border-radius: 2px;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 8px var(--card-shadow);
+      margin-bottom: 20px;
+    }
+    ul { list-style: inside disc; margin-left: 20px; }
+    p, li { margin-bottom: 10px; }
+  </style>
+  <!-- Marked.js for Markdown parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+  <div class="banner">Thailand Travel Handbook</div>
+  <nav class="navbar">
+    <a href="#overview">Overview</a>
+    <a href="#itinerary">Itinerary</a>
+    <a href="#cost">Cost</a>
+    <a href="#weather">Weather</a>
+    <a href="#place">Place</a>
+    <a href="#flight">Flight</a>
+    <a href="#hotel">Hotel</a>
+    <a href="#transport">Transport</a>
+    <a href="#currency">Currency</a>
+    <a href="#passport">Passport</a>
+    <a href="#phrases">Phrases</a>
+    <a href="#tips">Travel Tips</a>
+    <a href="#emergency">Emergency</a>
+  </nav>
+  <div class="content">
+    <section id="overview" class="card">
+      <h2>Overview</h2>
+      <div class="markdown-content">{{ sections.overview | e }}</div>
+    </section>
+    <section id="itinerary" class="card">
+      <h2>Itinerary</h2>
+      <div class="markdown-content">{{ sections.itinerary | e }}</div>
+    </section>
+    <section id="cost" class="card">
+      <h2>Cost Summary</h2>
+      <div class="markdown-content">{{ sections.cost | e }}</div>
+    </section>
+    <section id="weather" class="card">
+      <h2>Weather Forecast</h2>
+      <div class="markdown-content">{{ sections.weather | e }}</div>
+    </section>
+    <section id="place" class="card">
+      <h2>Place Options</h2>
+      <div class="markdown-content">{{ sections.place | e }}</div>
+    </section>
+    <section id="flight" class="card">
+      <h2>Flight Options</h2>
+      <div class="markdown-content">{{ sections.flight | e }}</div>
+    </section>
+    <section id="hotel" class="card">
+      <h2>Hotel Options</h2>
+      <div class="markdown-content">{{ sections.hotel | e }}</div>
+    </section>
+    <section id="transport" class="card">
+      <h2>Transport Options</h2>
+      <div class="markdown-content">{{ sections.transport | e }}</div>
+    </section>
+    <section id="currency" class="card">
+      <h2>Currency Exchange</h2>
+      <div class="markdown-content">{{ sections.currency | e }}</div>
+    </section>
+    <section id="passport" class="card">
+      <h2>Entry Requirements</h2>
+      <div class="markdown-content">{{ sections.passport | e }}</div>
+    </section>
+    <section id="phrases" class="card">
+      <h2>Useful Thai Phrases</h2>
+      <div class="markdown-content">
+        **Thai Phrases:**  
+        - สวัสดี (sà-wàt-dee): Hello  
+        - ขอบคุณ (khàwp-khun): Thank you  
+        - ใช่ (chai): Yes  
+        - ไม่ใช่ (mai chai): No  
+        - ไม่เป็นไร (mai bpen rai): No problem/It's alright
+      </div>
+    </section>
+    <section id="tips" class="card">
+      <h2>Travel Tips</h2>
+      <div class="markdown-content">
+        **Travel Tips:**  
+        - Always remove shoes before entering temples.  
+        - Insist on the meter in taxis to avoid overcharging.  
+        - Street food is delicious and cheap; opt for stalls with long lines, indicative of higher quality.  
+        - Negotiate prices respectfully at markets, as haggling is expected.  
+        - Carry a lightweight rain jacket; weather can be unpredictable.
+      </div>
+    </section>
+    <section id="emergency" class="card">
+      <h2>Emergency Contact</h2>
+      <div class="markdown-content">
+        **Emergency Contacts:**  
+        - Police: 191  
+        - Ambulance: 1669  
+        - Fire: 199  
+        - Tourist Police: 1155
+      </div>
+    </section>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Enable line break support for Markdown
+      if (marked && marked.setOptions) {
+        marked.setOptions({ breaks: true });
+      }
+      document.querySelectorAll('.markdown-content').forEach(el => {
+        let raw = el.textContent;
+        // Remove leading whitespace on each line to prevent code block rendering
+        raw = raw.replace(/^\s+/gm, '');
+        raw = raw.trim();
+        el.innerHTML = marked.parse(raw);
+      });
+    });
+  </script>
+</body>
+</html>

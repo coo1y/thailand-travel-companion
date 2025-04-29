@@ -1,0 +1,203 @@
+city_selection_task:
+  description: >
+    Analyze and select the best city in Thailand for the trip based on specific criteria 
+    such as weather patterns and seasonal events. 
+    This task involves comparing multiple cities, considering factors like current weather 
+    conditions, upcoming cultural or seasonal events, and overall travel expenses. 
+
+    Your final answer must be a detailed report on the chosen city, and everything 
+    you found out about it, including weather forecast and attractions.
+
+    Traveler Interest: {interest} 
+    Arrival Date: {arrival_date} 
+    Return Date: {return_date} 
+  expected_output: >
+    Detailed report on the chosen city including weather forecast, and attractions
+  agent: city_selection_expert
+
+local_task:
+  description: >
+    As a local expert on this city, you must compile an in-depth guide 
+    for someone traveling there and wanting to have THE BEST trip ever! 
+    Gather information about key attractions, local customs, 
+    special events, and daily activity recommendations. 
+    Find the best spots to go to, the kind of place only a local would know. 
+    This guide should provide a thorough detail of what the city has to offer, 
+    including key attractions like hidden gems, cultural hotspots, must-visit landmarks, and traveler interest.
+    
+    The final output MUST be categorized into types and each type contains 
+    key places/attractions with 2-3 lines of description each place and the reference. 
+    The output is similar to writing a blog about each place/attraction in 2-3 lines of description.
+
+    Traveler Interest: {interest} 
+    Arrival Date: {arrival_date} 
+    Return Date: {return_date}
+  expected_output: >
+    Output patterns like: 
+
+    # Places:\n
+    ### <type 1 of places>:\n
+    - **<place1.1>:** ... <describe this place for 2-3 lines, and MUST include day of week and time range to open if possible> (Ref: <website for this>)\n
+    - **<place1.2>:** ... <describe this place for 2-3 lines, and MUST include day of week and time range to open if possible> (Ref: <website for this>)\n
+    - ...\n
+    ### <type 2 of places>:\n <same pattern like the above> \n
+    ...
+  agent: local_expert
+
+preitinerary_task:
+  description: >
+    Using the selected places/attractions, create an appropriate itinerary from {arrival_date} ({arrival_time}) 
+    to {return_date} ({return_time}) with time slots for each activity. It MUST be the complete date time range.
+    You MUST suggest actual places to visit and actual restaurants except airports and hotels. 
+    Prioritize places/attractions to be near for each day to be easy for tourist to go. 
+    Don't forget to let the tourist go out, go back, check in, and check out hotels especially in 1st day, last day, 
+    or day to go another province at night. Don't show actual names of hotels which will be replaced later.
+
+    Traveler Interest: {interest} 
+    Arrival Date: {arrival_date} 
+    Arrival Time: {arrival_time} 
+    Return Date: {return_date} 
+    Return Time: {return_time} 
+  expected_output: >
+    For each day, output the itinerary day-by-day like: 
+
+    # Schedule:\n
+    ### Day <numday1> (<num_d1> <month> <year>): \n
+    **Morning:** \n
+    - Land at an airport \n
+    **Afternoon:** \n
+    - Lunch at <actual restaurant> \n
+    - Check in at a hotel \n
+    **Evening:** \n
+    - Visit <actual place> \n
+    **Night:** \n
+    - Visit <actual place> \n
+    - Go back to the hotel \n
+    ### Day <numday2> (<num_d2> <month> <year>): \n
+    ...
+  agent: preitinerary_composer
+
+hotels_suggestion_task:
+  description: >
+    1. Read the provided itinerary (list of days with their evening locations and dates) 
+    2. Group consecutive days that share the same location into blocks 
+    3. For each block, call GoogleHotelSearchTool once (using the block’s first date as 
+       check‑in and its last date as check‑out) 
+    4. Select the best few hotels for each day-block. 
+       If no hotel found, don't display any hotel and tell that no hotel available according to the condition. 
+    5. Show that all hotels have reference from Google Hotel Search 
+
+    Maximum price per night: ${hotel_budget}
+  expected_output: >
+    For each stay‐block, output like (if have hotels, else tell that no hotel available according to the condition): 
+    
+    ### Days <numday1>-<num_day2> (<num_d1> to <num_d2> <month> <year>):\n
+    - <actual hotel> (Rating <rating>, $<price>/night, <distance in km> km from <actual place>).\n
+    - <actual hotel> (Rating <rating>, $<price>/night, <distance in km> km from <actual place>).\n
+    - <actual hotel> (Rating <rating>, $<price>/night, <distance in km> km from <actual place>).\n
+    ### Days <numday3>-<num_day4> (<num_d3> to <num_d4> <month> <year>):\n
+    ...
+    \n\nSearch: Google Hotel Search
+  agent: accommodation_advisor
+
+choose_hotel_task:
+  description: >
+    1.	Read the list of up to N hotels output by the previous agent (accommodation advisor) for each day-block. 
+    2.	Select the best 1 hotel for each day-block according to the itinerary. 
+    3.	Replace the placeholder in the itinerary for those nights with the chosen hotel’s name, price, and location.
+  expected_output: >
+    Output chosen hotels for each day block on top (if no available hotels, don't pick any hotel) 
+    and the same itinerary with the actual hotel names (if have chosen hotel) like: 
+
+    # Hotel:\n
+    ### Days <numday1>-<num_day2> (<num_d1> to <num_d2> <month> <year>): \n
+    - <actual hotel> (Rating <rating>, $<price>/night, <distance in km> km from <actual place>)\n
+    ...
+    \n# Schedule:\n
+    ### Day <numday1> (<num_d1> <month> <year>): \n
+    **Morning:** \n
+    - Land at an airport \n
+    **Afternoon:** \n
+    - Lunch at <actual restaurant> \n
+    - Check in at <actual hotel> \n
+    **Evening:** \n
+    - Visit <actual place> \n 
+    **Night:** \n 
+    - Visit <actual place> \n
+    - Go back to <actual hotel> \n
+    ### Day <numday2> (<num_d2> <month> <year>): \n
+    ...
+  agent: accommodation_picker
+
+flight_suggestion_task:
+  description: >
+    1. Call the tool with the traveler’s origin, destination, date, time range, 
+       and maximum price per flight for both outbound and return flights. 
+       For outbound, outbound date MUST be the same as arrival date.\n
+    2. Display top 3 flights for both outbound and return segments.
+       If no flight found, don't display any flights and tell that no flights available as condition.\n
+    3. Show that all flights have reference from Google Flight Search
+
+    \nFor outbound:\n
+    origin: {depart_from}\n
+    destination: BKK\n
+    arrival date: {arrival_date}\n
+    arrival time: {arrival_time}\n
+    maximum price: {flight_budget}\n
+
+    \nFor return:\n
+    origin: BKK\n
+    destination: {return_to}\n
+    return date: {return_date}\n
+    return time: {return_time}\n
+    maximum price: {flight_budget}\n
+  expected_output: >
+    For each segment, output like (if have flights, else tell that no flight available according to the condition):
+    ### For outbound:\n
+    - <airline> <flight_number> departs <departure_airport> on <depart_date>, <departure_time>, 
+    arrives <arrival_airport> at <arrival_time>, duration <duration>, cost <currency><price>;\n
+    - <airline> <flight_number> departs <departure_airport> on <depart_date>, <departure_time>, 
+    arrives <arrival_airport> at <arrival_time>, duration <duration>, cost <currency><price>;\n
+    - <airline> <flight_number> departs <departure_airport> on <depart_date>, <departure_time>, 
+    arrives <arrival_airport> at <arrival_time>, duration <duration>, cost <currency><price>;\n
+    ### For return:  … (same above pattern)
+    \n\nSearch: Google Flight Search
+  agent: flight_advisor
+
+choose_flight_task:
+  description: >
+    1. Call the tool with the traveler’s origin, destination, date, time range, 
+       and maximum price per flight for both outbound and return flights. 
+    2. Pick only best 1 option each for outbound and return. 
+    3. Replace the itinerary’s ending airport with the chosen outbound departure_airport, 
+       and starting airport with the chosen return arrival_airport (should be both Thai airports).
+  expected_output: >
+    Output the chosen 1 flight each and the details on top, (if no available flights, don't pick any flights) 
+    and pick appropriate real airport name (if have chosen flight) 
+    into the same itinerary with the actual airport names like: 
+    
+    # Flight:\n
+    - **For outbound:** <airline> <flight_number> departs <departure_airport> on <depart_date>, <departure_time>, 
+    arrives <arrival_airport> at <arrival_time>, duration <duration>, cost <currency><price>;\n
+    - **For return:** … (same above pattern)\n
+
+    \n# Hotel:\n
+    - **Days <numday1>-<num_day2> (<num_d1> to <num_d2> <month> <year>):** 
+    <actual hotel> (Rating <rating>, $<price>/night, <distance in km> km from <actual place>)\n
+    ...
+
+    \n# Schedule:\n
+    ### Day <numday1> (<num_d1> <month> <year>): \n
+    #### **Morning:** \n
+    - Land at <actual airport name> \n
+    #### **Afternoon:** \n
+    - Lunch at <actual restaurant> \n
+    - Check in at <actual hotel> \n
+    #### **Evening:** \n
+    - Visit <actual place> \n 
+    #### **Night:** \n 
+    - Visit <actual place> \n
+    - Go back to <actual hotel> \n
+    ### Day <numday2> (<num_d2> <month> <year>): \n
+    ...
+  agent: flight_picker

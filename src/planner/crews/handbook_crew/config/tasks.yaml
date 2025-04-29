@@ -1,0 +1,129 @@
+determine_transport_task:
+  description: >
+    First, extract all the dates in the itinerary and then 
+    For each leg in the provided day‑by‑day itinerary, 
+    find 2–3 transport option each like the expected output. 
+    For each option, include:\n
+      • mode (walk/bus/train/boat/taxi/tuktuk/car rent/flight)\n
+      • total duration\n
+      • estimated cost\n
+    Prioritize giving a mix of fastest, cheapest, and mid‑range options. 
+
+    You MUST show answers of transportations' each leg. Don't stop before getting all answers correctly. 
+    The output MUST contain all days in the itinerary and all legs. 
+    Don't explain anything. Just show the output expected. 
+    Don't use ~ (tilde) in the output.\n
+
+    \nItinerary:\n{itinerary}
+  expected_output: >
+    For each day, output like: 
+    
+    ### Day 4 (4 July 2025): LiT BANGKOK Residence → Bang Krachao → Chatuchak Market → Ratchada Night Market → LiT BANGKOK Residence \n
+    #### 1. LiT BANGKOK Residence → Bang Krachao\n
+    - Mix: BTS Siam → Bang Na ($1.21) + Taxi to Wat Bang Na Nok Pier (THB 1.39–1.94) + Boat to Bang Krachao (THB 0.27); 45–60 minutes. \n
+    - Taxi: Approx. $4.20–$5.00; 30–45 minutes. \n
+    #### 2. Bang Krachao → Chatuchak Market\n
+    - Taxi: Approx. $5.00–$6.10; 40–50 minutes. \n
+    - Public Transport: Return boat ($0.27) + taxi to BTS Bang Na ($1.39–$1.94) → BTS Bang Na → Mo Chit ($1.21); 60–75 minutes. \n
+    #### 3. Chatuchak → Ratchada Train Market \n
+    - MRT: Chatuchak Park → Thailand Cultural Centre ($0.65); 15 minutes. \n
+    - Taxi: Approx. $2.20–$2.80; 15–20 minutes. \n 
+    #### 4. Ratchada Night Market → LiT BANGKOK Residence \n 
+    - BTS: BTS Bangna → BTS Siam ($1.21); 40 minutes. \n 
+    - Taxi: Approx. $3.20–$4.00; 20–30 minutes. \n
+    ### Day 5 (5 July 2025): ...
+  agent: transportation_specialist
+
+summarize_costs_task:
+  description: >
+    1. Take the finalized itinerary, including:\n
+       • Selected outbound & return flight prices\n
+       • Chosen hotel nightly rates and number of nights in each hotel\n
+    2. Sum the costs in each category.\n
+    3. Compute the total trip cost.
+
+    \nItinerary:\n{itinerary}
+  expected_output: >
+    Output patterns like: 
+
+    ### Breakdown:\n
+    - Flights: $<flights_cost>\n
+    - Hotels: $<hotels_cost>\n
+    
+    ### Total cost: $<total_cost>
+  agent: cost_summary_agent
+
+weather_forecast_task:
+  description: >
+    Find weather forecast each month and location in the itinerary 
+    to retrieve summary, high temperature, and low temperature. 
+    You can search the internet to provide the forecasts.
+
+    \nItinerary:\n{itinerary}
+  expected_output: >
+    Output pattern like below:
+
+    ### Bangkok (July):\n
+    - Avg. temp: 27–31 °C\n
+    - Conditions: Frequent heavy afternoon showers, high humidity\n
+    - Tip: Pack a lightweight rain jacket and schedule temple visits in the morning to avoid downpours.
+
+    \n### Chiang Mai (July):\n
+    - Avg. temp: 24–30 °C\n
+    - Conditions: Early‐morning drizzle, clear late afternoons\n
+    - Tip: Bring an umbrella and plan hill-tribe treks for after 3 PM.\n
+    ...
+  agent: weather_agent
+
+travel_essentials_task:
+  description: >
+    You can search the internet if unknown for these informations: 
+    1. Currency exchange with base='USD' and target='THB' to get the latest rate.\n
+    2. Based on the traveler’s nationality, outline Thailand’s passport/visa rules.\n
+    3. Overview: For a travel's handbook, describe the trip briefly about 2-3 lines including 
+       travel's date range, location, and tourist's interest.\n
+
+    You MUST show answers of all sections. Don't stop before getting all answers correctly.\n
+
+    \nPassport: {passport}\n
+    \nInterest: {interest}\n
+    \nItinerary:\n{itinerary}
+  expected_output: >
+    Expected output like: 
+    
+    **Currency:** 1 USD = <rate USD to THB> THB. \n
+    **Entry Rules:** As a {passport} citizen, … to enter Thailand. \n
+    **Overview:** ... <describe trip overview in a handbook>
+  agent: travel_essentials_agent
+
+render_handbook_task:
+  description: >
+    1) Call the tool (no other file paths allowed) to get the raw HTML template.\n
+    2) Replace each sections (e.g. overview, itinerary, weather, …, emergency) 
+       in that template with the corresponding HTML snippets from the `sections` dictionary.\n
+    3) Return the complete HTML markup and ensure that every section MUST be in markdown format 
+       as the template uses <div class=markdown-content>...</div>\n
+
+    \nDetail of the sections:\n
+    - Overview: a few lines of the description about the trip.\n
+    - Itinerary: the tourist's itinerary.\n
+    - Cost Summary: Total of flights and hotels costs and the breakdown.\n
+    - Weather Forecast: Summary of weather forecast each month and location in the itinerary.\n
+    - Place: Show place/attraction details (extracted from result/attractions.txt)
+    - Flight: Show flight options and said the results are from Google Flight Search (extracted from result/flights.txt)\n
+    - Hotel: Show hotel options with the reference and said the results are from Google Hotel Search (extracted from result/hotels.txt)\n
+    - Transport Options: Show transportation options for all legs in the itinerary.\n
+    - Currency Exchange: The latest currency exchange rate with base='USD' and target='THB'.\n
+    - Entry Requirements: As a {passport} citizen, … to enter Thailand. Then show the URLs for more update 
+         including: https://www.thaievisa.go.th/ and https://www.thaiembassy.com/thailand-visa/thailand-tourist-visa)” \n
+    - Useful Thai Phrases: some basic words in Thai. This is already in the HTML template.\n
+    - Travel Tips: tips of traveling in location in the itinerary. This is already in the HTML template.\n
+    - Emergency Contact: Thai emergency contacts. This is already in the HTML template.\n
+
+    \nItinerary:\n{itinerary}
+  expected_output: >
+    An HTML file of the travel handbook, with all placeholders replaced. 
+    Each placeholder MUST be in markdown format. 
+    You MUST output the full HTML file based on the template and all placeholders replaced. 
+    MUST NOT show any extra texts and don't show ``` html ```. JUST HTML code only with all required contents.
+  agent: html_generator
