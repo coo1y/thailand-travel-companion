@@ -53,7 +53,7 @@ Thailand has faced tourism challenges such as natural disasters impacting touris
 - Guardrails built-in: Refuses off-topic questions to improve trust and relevance.
 
 ### Agent-powered Solo Travel Planner
-![image](images/TTC_planner.png)
+![image](images/TTC_Planner.png)
 
 - User provides key travel inputs:
     - Nationality, departure location, return date, budget, and personal interests
