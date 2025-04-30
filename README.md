@@ -1,6 +1,6 @@
 # Thailand Trip Companion
 
-**Your Intelligent Guide to Thailand**
+![image](images/TTC_Logo.png)
 
 Thailand Trip Companion is an AI-powered travel assistant designed to make exploring Thailand safer, easier, and more personalized. Built using Python, Azure OpenAI, CrewAI, and more Azure Services, this application enables travelers to plan their trips effortlessly while overcoming language barriers and accessing up-to-date travel information.
 
@@ -57,7 +57,6 @@ Thailand has faced tourism challenges such as natural disasters impacting touris
 
 - User provides key travel inputs:
     - Nationality, departure location, return date, budget, and personal interests
-    - This is either entered manually or loaded from saved user data (e.g., from a PostgreSQL database)
 - Itinerary Generation Agents:
     - **Attractions Agent:** selects suitable tourist spots based on interest, time, and geography
     - **Flights Agent:** finds suitable outbound and return flights using Bing Search or flight APIs
@@ -131,8 +130,29 @@ Thailand has faced tourism challenges such as natural disasters impacting touris
 ---
 
 ## Demo
-
 [![Watch the video](https://img.youtube.com/vi/FnwEfFdVK20/0.jpg)](https://www.youtube.com/watch?v=FnwEfFdVK20)
+
+---
+
+## App Interface & Output
+### Chatbot
+![image](images/TTC_Example_Chatbot.png)
+
+### Planner
+![image](images/TTC_Example_Planner.png)
+
+### Feedback
+![image](images/TTC_Example_Feedback.png)
+
+### Example Travel Handbook
+[Full Example Here](example_travel_handbook.html)
+![image](images/TTC_Example_Handbook1.png)
+![image](images/TTC_Example_Handbook2.png)
+![image](images/TTC_Example_Handbook3.png)
+![image](images/TTC_Example_Handbook4.png)
+![image](images/TTC_Example_Handbook5.png)
+![image](images/TTC_Example_Handbook6.png)
+![image](images/TTC_Example_Handbook7.png)
 
 ---
 
