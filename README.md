@@ -120,7 +120,9 @@ Thailand has faced tourism challenges such as natural disasters impacting touris
 - Planner
     - More stable result
     - More flexibility
-    - Able to choose flights and hotels by either user or AI
+    - Able to choose flights and hotels by either user or agents
+        - The user will be able to place URLs of hotels or flights to let the agents extract and generate itinerary according to the links. Or,
+        - The agents will present multiple hotel and flight options, allowing the user to select their preferences before the itinerary is finalized.
     - Show image and map of places
 - Others
     - User Access Control
